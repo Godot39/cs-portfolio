@@ -1,7 +1,21 @@
 '''A text-based fantasy RPG built in Python with ASCII art, turn-based combat, and player progression.'''
 
 import random, time, sys
+from playsound import playsound
 
+# define sounds
+def play_dragon_cry():
+    playsound("dragon_cry.wav") # played on dragon fight
+    
+def play_dragon_moan():
+    playsound("dragon_moan.wav") # played on dragon death
+    
+def play_dragon_wings():
+    playsound("dragon_wings.wav") # played when player is defeated by dragon
+    
+def play_annoyed_dragon():
+    playsound("annoyed_dragon.wav") # played when player is not able to fight the dragon
+    
 # print text slowly when called
 def slow_print(text, delay=0.01): 
     for char in text:
@@ -270,6 +284,24 @@ __   __            ____  _          _
 (  . \!!/    . )     .-''-.  '..~~~~
  \ | (--)---| /'-..-'BP    '-..-~'
   ^^^ ''   ^^^
+    ''',
+    "death_by_dragon" : r'''
+                     ___====-_  _-====___
+           _--^^^#####//      \\#####^^^--_
+        _-^##########// (    ) \\##########^-_
+       -############//  |\^^/|  \\############-
+     _/############//   (@::@)   \\############\_
+    /#############((     \\//     ))#############\
+   -###############\\    (oo)    //###############-
+  -#################\\  / VV \  //#################-
+ -###################\\/      \//###################-
+_#/|##########/\######(   /\   )######/\##########|\#_
+|/ |#/\#/\#/\/  \#/\##\  |  |  /##/\#/  \/\#/\#/\#| \|
+`  |/  V  V  `   V  \#\| |  | |/#/  V   '  V  V  \|  '
+   `   `  `      `   / | |  | | \   '      '  '   '
+                    (  | |  | |  )
+                   __\ | |  | | /__
+                  (vvv(VVV)(VVV)vvv)
     '''
     }
 
@@ -472,11 +504,12 @@ class Boss(Entity):
 
     # called from player's attack method when boss (target) health equals 0 --- also an overridden method from entity class
     def death(self):
+        slow_print(ascii_art["dragon_death"], delay = 0.0001)
+        play_dragon_moan()
         slow_print(f"\nThe ancient dragon falls to the soggy, bleak stone inside the cave. The dragon begins to breathe slower and slower and you see the terror")
         slow_print("in its eyes. Yet, it seems proud to have fought someone as strong as you. But are you proud? Do you feel acomplished at what")
         slow_print("you have achieved, for better, or for worse? Was everything you killed worth it? All of the pain you have caused other creatures?")
         slow_print(f"Once more, that is for you to decide. You live with your decisions. Each... and every one...")
-        slow_print(ascii_art["dragon_death"], delay = 0.0001)
         sys.exit()
         
     # attack the player if enemy is still alive
@@ -494,6 +527,8 @@ class Boss(Entity):
 
         # kill the target if health is below 0
         if (target.current_health <= 0):
+            slow_print(ascii_art["death_by_dragon"], delay = 0.0001)
+            play_dragon_wings()
             slow_print("Very disappointing... I thought you were.. stronger..", delay = 0.1)
             target.death()
 
@@ -590,9 +625,11 @@ Coins: {player.coins}''')
             elif (user_input == 1) and (player.current_location == cave):
                 if (player.level < 5):
                     slow_print(ascii_art["dragon_rest"], delay = 0.0001)
+                    play_annoyed_dragon()
                     slow_print("I will not battle an unworthy, worthless, dishonorable adversary... It would not be entertaining.. for me...", delay = 0.1)
                 if (player.level >= 5):
                     slow_print(ascii_art["Dragon"], delay = 0.0001)
+                    play_dragon_cry()
                     slow_print("Finally! A worthy opponent has come upon my sight!", delay = 0.1)
                     slow_print(f"You stand before the {boss.name}. This malicious creature has {boss.health} HP and inflicts {boss.damage} damage.")
                     slow_print(f'''
