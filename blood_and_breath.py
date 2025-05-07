@@ -366,7 +366,7 @@ class Player(Entity):
                 slow_print("You already have the max amount of potions you can carry.")
         
     def use_potion(self):      
-        # use potion if player has one
+        # use potion if the player has one
         if (self.potions > 0) and (self.current_health < self.max_health):
             self.current_health += 20
             if (self.current_health > self.max_health):
