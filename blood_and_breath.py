@@ -1,20 +1,23 @@
 '''A text-based fantasy RPG built in Python with ASCII art, turn-based combat, and player progression.'''
 
-import random, time, sys
-from playsound import playsound
+import random, time, sys, pygame
 
 # define sounds
 def play_dragon_cry():
-    playsound("dragon_cry.wav") # played on dragon fight
+    pygame.mixer.init()
+    pygame.mixer.Sound("dragon_cry.wav") # played on dragon fight
     
 def play_dragon_moan():
-    playsound("dragon_moan.wav") # played on dragon death
+    pygame.mixer.init()
+    pygame.mixer.Sound("dragon_moan.wav") # played on dragon death
     
 def play_dragon_wings():
-    playsound("dragon_wings.wav") # played when player is defeated by dragon
+    pygame.mixer.init()
+    pygame.mixer.Sound("dragon_wings.wav") # played when player is defeated by dragon
     
 def play_annoyed_dragon():
-    playsound("annoyed_dragon.wav") # played when player is not able to fight the dragon
+    pygame.mixer.init()
+    pygame.mixer.Sound("annoyed_dragon.wav").play() # played when player is not able to fight the dragon
     
 # print text slowly when called
 def slow_print(text, delay=0.01): 
