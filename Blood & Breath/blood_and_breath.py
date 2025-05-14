@@ -2,22 +2,25 @@
 
 import random, time, sys, pygame
 
-# define sounds
+# played on dragon fight
 def play_dragon_cry():
     pygame.mixer.init()
-    pygame.mixer.Sound("dragon_cry.wav") # played on dragon fight
+    pygame.mixer.Sound("dragon_cry.wav") # sound by Kataoneon on freesound.org
     
+# played on dragon death
 def play_dragon_moan():
     pygame.mixer.init()
-    pygame.mixer.Sound("dragon_moan.wav") # played on dragon death
+    pygame.mixer.Sound("dragon_moan.wav") # sound by Robinhood76 on freesound.org
     
+# played when player is defeated by dragon
 def play_dragon_wings():
     pygame.mixer.init()
-    pygame.mixer.Sound("dragon_wings.wav") # played when player is defeated by dragon
+    pygame.mixer.Sound("dragon_wings.wav") # sound by BenignChaos on freesound.org
     
+# played when player is not able to fight the dragon
 def play_annoyed_dragon():
     pygame.mixer.init()
-    pygame.mixer.Sound("annoyed_dragon.wav").play() # played when player is not able to fight the dragon
+    pygame.mixer.Sound("annoyed_dragon.wav").play() # sound by Anton on freesound.org
     
 # print text slowly when called
 def slow_print(text, delay=0.01): 
