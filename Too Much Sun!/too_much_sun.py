@@ -225,6 +225,7 @@ while not done:
                 print_text(font, 650, 60, "Health: 0")
                 pygame.display.flip()
                 restart()
+                
         if noodle_active and noodle_rect.colliderect(enemy.rect):
             enemies.remove(enemy)
             enemies_helped += 1
