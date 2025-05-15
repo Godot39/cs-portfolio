@@ -187,9 +187,9 @@ while not done:
                 droplets.remove(d)
                 enemies.remove(enemy)
                 enemies_helped += 1
-                if random.random() < 0.2:
+                if random.random() < 0.05:
                     # 20% chance to restore 5 water
-                    water = min(water + 5, 20)  # cap at max water
+                    water = min(water + 2, 20)  # cap at max water
                 break
 
         if rect.right < 0 or rect.left > 800 or rect.bottom < 0 or rect.top > 600:
@@ -225,15 +225,14 @@ while not done:
                 print_text(font, 650, 60, "Health: 0")
                 pygame.display.flip()
                 restart()
-                
         if noodle_active and noodle_rect.colliderect(enemy.rect):
             enemies.remove(enemy)
             enemies_helped += 1
-            if random.random() < 0.2:
+            if random.random() < 0.05:
                 # 20% chance to restore 5 water
-                water = min(water + 5, 20)  # cap at max water
+                water = min(water + 2, 20)  # cap at max water
                 
-    if enemies_remaining == 0 and enemies_helped >= enemies_needed:
+    if enemies_helped >= enemies_needed:
         wave += 1
         enemies_needed = 10 + wave * 2
         enemies_remaining = enemies_needed
