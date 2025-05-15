@@ -10,9 +10,9 @@ pygame.display.set_caption("Too Much Sun!")
 clock = pygame.time.Clock()
 
 # background music
-pygame.mixer.music.load("atomic_apple_juice.wav") # music by BobThePilot on youtube.com
-pygame.mixer.music.set_volume(0.4)
-pygame.mixer.music.play(-1)
+#pygame.mixer.music.load("atomic_apple_juice.wav") # music by BobThePilot on youtube.com
+#pygame.mixer.music.set_volume(0.4)
+#pygame.mixer.music.play(-1)
 
 # func to print text to screen
 def print_text(font, x, y, text, color=(255,255,255)):
@@ -80,6 +80,12 @@ noodle_timer = 0
 noodle_cooldown = 300 
 facing_right = True  # updated based on mouse position
 bonk = pygame.mixer.Sound("plop.wav") # sound by Squirrel_404 on freesound.org
+
+# wave vars
+wave = 1
+enemies_needed = 10
+enemies_remaining = enemies_needed  # how many still need to be spawned
+enemies_helped = 0  # how many you've helped
 
 done = False
 
@@ -150,22 +156,24 @@ while not done:
     screen.fill((135, 206, 250))
     pygame.draw.rect(screen, (255, 255, 153), (0, 500, 800, 100))
     
-    # draw water amount, health
+    # draw water amount, health, wave
     print_text(font, 40, 60, "Water: " + str(water))
     print_text(font, 650, 60, "Health: " + str(player_health))
+    print_text(font, 350, 60, "Wave: " + str(wave))
 
     # draw player
     screen.blit(player_img, player_rect)
     
     # enemy spawn logic
     enemy_spawn_timer += clock.get_time()
-    if enemy_spawn_timer >= enemy_spawn_delay:
+    if enemies_remaining > 0 and enemy_spawn_timer >= enemy_spawn_delay:
         side = random.choice(["left", "right"])
         if side == "left":
             enemies.append(Enemy(-96, 1))
         elif side == "right":
             enemies.append(Enemy(800, -1))
         enemy_spawn_timer = 0
+        enemies_remaining -= 1
 
     # water gun logic
     for d in droplets[:]:
@@ -178,6 +186,7 @@ while not done:
             if rect.colliderect(enemy.rect):
                 droplets.remove(d)
                 enemies.remove(enemy)
+                enemies_helped += 1
                 if random.random() < 0.2:
                     # 20% chance to restore 5 water
                     water = min(water + 5, 20)  # cap at max water
@@ -218,9 +227,17 @@ while not done:
                 restart()
         if noodle_active and noodle_rect.colliderect(enemy.rect):
             enemies.remove(enemy)
+            enemies_helped += 1
             if random.random() < 0.2:
                 # 20% chance to restore 5 water
                 water = min(water + 5, 20)  # cap at max water
+                
+    if enemies_remaining == 0 and enemies_helped >= enemies_needed:
+        wave += 1
+        enemies_needed = 10 + wave * 2
+        enemies_remaining = enemies_needed
+        enemies_helped = 0
+        enemy_spawn_delay = max(500, enemy_spawn_delay - 200)
             
     pygame.display.flip()
     clock.tick(60)
