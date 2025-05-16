@@ -40,10 +40,13 @@ player_img = pygame.image.load("player.png").convert_alpha()
 player_rect = player_img.get_rect()
 player_rect.x = 350
 player_rect.y = 440
-font = pygame.font.Font(None, 27)
 player_health = 100
 score = 0
 ouch = pygame.mixer.Sound("ouch.wav") # sound by OwlStorm on freesound.org
+
+# font vars
+font = pygame.font.Font(None, 27)
+dark = (0, 0, 0)
 
 # if player is no longer alive
 def restart():
@@ -164,10 +167,10 @@ while not done:
     pygame.draw.rect(screen, (255, 255, 153), (0, 500, 800, 100))
     
     # draw water amount, health, wave, score
-    print_text(font, 40, 80, "Water: " + str(water))
-    print_text(font, 650, 80, "Health: " + str(player_health))
-    print_text(font, 670, 540, "Wave: " + str(wave))
-    print_text(font, 350, 80, "Score: " + str(score))
+    print_text(font, 40, 80, "Water: " + str(water), dark)
+    print_text(font, 650, 80, "Health: " + str(player_health), dark)
+    print_text(font, 670, 540, "Wave: " + str(wave), dark)
+    print_text(font, 350, 80, "Score: " + str(score), dark)
 
     # draw player
     screen.blit(player_img, player_rect)
@@ -232,10 +235,10 @@ while not done:
                 screen.fill((135, 206, 250))
                 pygame.draw.rect(screen, (255, 255, 153), (0, 500, 800, 100))
                 screen.blit(player_img, player_rect)
-                print_text(font, 650, 60, "Health: 0")
-                print_text(font, 40, 80, "Water: " + str(water))
-                print_text(font, 670, 540, "Wave: " + str(wave))
-                print_text(font, 350, 80, "Score: " + str(score))
+                print_text(font, 650, 80, "Health: 0", dark)
+                print_text(font, 40, 80, "Water: " + str(water), dark)
+                print_text(font, 670, 540, "Wave: " + str(wave), dark)
+                print_text(font, 350, 80, "Score: " + str(score), dark)
                 pygame.display.flip()
                 restart()
         if noodle_active and noodle_rect.colliderect(enemy.rect):
