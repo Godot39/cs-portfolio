@@ -10,9 +10,12 @@ pygame.display.set_caption("Too Much Sun!")
 clock = pygame.time.Clock()
 
 # background music
-#pygame.mixer.music.load("atomic_apple_juice.wav") # music by BobThePilot on youtube.com
-#pygame.mixer.music.set_volume(0.4)
-#pygame.mixer.music.play(-1)
+music_list = ["invasive_idiot.wav", "luminous_lamb.wav", "peckish_pumpkin.wav", "radical_robot.wav"] # music by BobThePilot on youtube.com
+music = random.choice(music_list)
+pygame.mixer.music.load(music)
+pygame.mixer.music.set_volume(0.4)
+pygame.mixer.music.play(-1)
+
 
 # func to print text to screen
 def print_text(font, x, y, text, color=(255,255,255)):
@@ -51,6 +54,8 @@ def restart():
     pygame.display.flip()
     while waiting:
         for event in pygame.event.get():
+            if event.type == QUIT:
+                sys.exit()
             if event.type == KEYDOWN:
                 if event.key == K_r:
                     waiting = False
@@ -83,9 +88,10 @@ bonk = pygame.mixer.Sound("plop.wav") # sound by Squirrel_404 on freesound.org
 
 # wave vars
 wave = 1
-enemies_needed = 10
+enemies_needed = 10 # constant (sorta)
 enemies_remaining = enemies_needed  # how many still need to be spawned
 enemies_helped = 0  # how many you've helped
+wave_alarm = pygame.mixer.Sound("beep.wav") # sound by Greencouch on freesound.org
 
 done = False
 
@@ -131,7 +137,7 @@ while not done:
                     # play water splash sound
                     water_splash.play()
 
-        # handle key presses
+        # handle quit
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 done = True
@@ -187,8 +193,8 @@ while not done:
                 droplets.remove(d)
                 enemies.remove(enemy)
                 enemies_helped += 1
-                if random.random() < 0.05:
-                    # 20% chance to restore 5 water
+                if random.random() < 0.1:
+                    # 10% chance to restore 5 water
                     water = min(water + 2, 20)  # cap at max water
                 break
 
@@ -214,6 +220,7 @@ while not done:
         # check for collisions player, noodle
         if enemy.rect.colliderect(player_rect):
             enemies.remove(enemy)
+            enemies_helped += 1
             ouch.play()
             player_health -= 20
             if player_health <= 0:
@@ -223,20 +230,23 @@ while not done:
                 screen.blit(player_img, player_rect)
                 print_text(font, 40, 60, "Water: " + str(water))
                 print_text(font, 650, 60, "Health: 0")
+                print_text(font, 350, 60, "Wave: " + str(wave))
                 pygame.display.flip()
                 restart()
         if noodle_active and noodle_rect.colliderect(enemy.rect):
             enemies.remove(enemy)
             enemies_helped += 1
-            if random.random() < 0.05:
-                # 20% chance to restore 5 water
+            if random.random() < 0.1:
+                # 10% chance to restore 5 water
                 water = min(water + 2, 20)  # cap at max water
                 
+    # check if new wave should begin
     if enemies_helped >= enemies_needed:
         wave += 1
+        enemies_helped = 0
+        wave_alarm.play()
         enemies_needed = 10 + wave * 2
         enemies_remaining = enemies_needed
-        enemies_helped = 0
         enemy_spawn_delay = max(500, enemy_spawn_delay - 200)
             
     pygame.display.flip()
