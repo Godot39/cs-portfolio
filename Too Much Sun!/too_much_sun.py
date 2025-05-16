@@ -42,6 +42,7 @@ player_rect.x = 350
 player_rect.y = 440
 font = pygame.font.Font(None, 27)
 player_health = 100
+score = 0
 ouch = pygame.mixer.Sound("ouch.wav") # sound by OwlStorm on freesound.org
 
 # if player is no longer alive
@@ -162,10 +163,11 @@ while not done:
     screen.fill((135, 206, 250))
     pygame.draw.rect(screen, (255, 255, 153), (0, 500, 800, 100))
     
-    # draw water amount, health, wave
-    print_text(font, 40, 60, "Water: " + str(water))
-    print_text(font, 650, 60, "Health: " + str(player_health))
-    print_text(font, 350, 60, "Wave: " + str(wave))
+    # draw water amount, health, wave, score
+    print_text(font, 40, 80, "Water: " + str(water))
+    print_text(font, 650, 80, "Health: " + str(player_health))
+    print_text(font, 670, 540, "Wave: " + str(wave))
+    print_text(font, 350, 80, "Score: " + str(score))
 
     # draw player
     screen.blit(player_img, player_rect)
@@ -193,6 +195,7 @@ while not done:
                 droplets.remove(d)
                 enemies.remove(enemy)
                 enemies_helped += 1
+                score += 10
                 if random.random() < 0.1:
                     # 10% chance to restore 5 water
                     water = min(water + 2, 20)  # cap at max water
@@ -221,6 +224,7 @@ while not done:
         if enemy.rect.colliderect(player_rect):
             enemies.remove(enemy)
             enemies_helped += 1
+            score += 10
             ouch.play()
             player_health -= 20
             if player_health <= 0:
@@ -228,20 +232,23 @@ while not done:
                 screen.fill((135, 206, 250))
                 pygame.draw.rect(screen, (255, 255, 153), (0, 500, 800, 100))
                 screen.blit(player_img, player_rect)
-                print_text(font, 40, 60, "Water: " + str(water))
                 print_text(font, 650, 60, "Health: 0")
-                print_text(font, 350, 60, "Wave: " + str(wave))
+                print_text(font, 40, 80, "Water: " + str(water))
+                print_text(font, 670, 540, "Wave: " + str(wave))
+                print_text(font, 350, 80, "Score: " + str(score))
                 pygame.display.flip()
                 restart()
         if noodle_active and noodle_rect.colliderect(enemy.rect):
             enemies.remove(enemy)
             enemies_helped += 1
+            score += 10
             if random.random() < 0.1:
                 # 10% chance to restore 5 water
                 water = min(water + 2, 20)  # cap at max water
                 
     # check if new wave should begin
     if enemies_helped >= enemies_needed:
+        score += 50
         wave += 1
         enemies_helped = 0
         wave_alarm.play()
