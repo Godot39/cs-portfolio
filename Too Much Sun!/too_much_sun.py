@@ -200,7 +200,7 @@ while not done:
                 enemies_helped += 1
                 score += 10
                 if random.random() < 0.1:
-                    # 10% chance to restore 5 water
+                    # 10% chance to restore 2 water
                     water = min(water + 2, 20)  # cap at max water
                 break
 
@@ -246,7 +246,7 @@ while not done:
             enemies_helped += 1
             score += 10
             if random.random() < 0.1:
-                # 10% chance to restore 5 water
+                # 10% chance to restore 2 water
                 water = min(water + 2, 20)  # cap at max water
                 
     # check if new wave should begin
