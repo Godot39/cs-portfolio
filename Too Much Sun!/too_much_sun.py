@@ -15,7 +15,7 @@ music = random.choice(music_list)
 pygame.mixer.music.load(music)
 pygame.mixer.music.set_volume(0.4)
 pygame.mixer.music.play(-1)
-
+print("Music:", music, "by BobThePilot on youtube.com")
 
 # func to print text to screen
 def print_text(font, x, y, text, color=(255,255,255)):
@@ -253,11 +253,13 @@ while not done:
     if enemies_helped >= enemies_needed:
         score += 50
         wave += 1
-        enemies_helped = 0
         wave_alarm.play()
+        enemy_spawn_delay = max(300, enemy_spawn_delay - 300)
+
+        # reset
         enemies_needed = 10 + wave * 2
         enemies_remaining = enemies_needed
-        enemy_spawn_delay = max(500, enemy_spawn_delay - 200)
-            
+        enemies_helped = 0
+        
     pygame.display.flip()
     clock.tick(60)
