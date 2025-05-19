@@ -1,4 +1,4 @@
-'''Too Much Sun! is a 2D wave-based game. Armed with a pool noodle and water gun, the player must \
+'''Too Much Sun! is a 2D wave-based game. Armed with a pool noodle and aloe gun, the player must \
 cool down waves of sunburnt people who are acting strangely due to staying in the sun too long.'''
 
 import pygame, sys, random
@@ -51,9 +51,9 @@ dark = (0, 0, 0)
 # if player is no longer alive
 def restart():
     global player_health
-    global water
-    print_text(font, 400, 300, "Game over...")
-    print_text(font, 400, 330, "Press R to restart.")
+    global aloe
+    print_text(font, 250, 300, "Game over...", dark)
+    print_text(font, 250, 330, "Press R to restart.", dark)
     waiting = True
     pygame.display.flip()
     while waiting:
@@ -64,18 +64,18 @@ def restart():
                 if event.key == K_r:
                     waiting = False
                     player_health = 100
-                    water = 20
+                    aloe = 20
                 elif event.key == K_ESCAPE:
                     sys.exit()
                 else:
                     waiting = True
 
-# water gun vars
+# aloe gun vars
 droplets = []
-water = 20
+aloe = 20
 last_shot_time = 0
 shot_cooldown = 400 
-water_splash = pygame.mixer.Sound("splash.wav")  # sound by rombart on freesound.org
+aloe_splash = pygame.mixer.Sound("splash.wav")  # sound by rombart on freesound.org
 
 # enemy vars
 enemies = []
@@ -97,6 +97,32 @@ enemies_remaining = enemies_needed  # how many still need to be spawned
 enemies_helped = 0  # how many you've helped
 wave_alarm = pygame.mixer.Sound("beep.wav") # sound by Greencouch on freesound.org
 
+# menu/controls func
+def show_menu():
+    screen.fill((135, 206, 250))
+    pygame.draw.rect(screen, (255, 255, 153), (0, 500, 800, 100))
+
+    print_text(font, 250, 100, "Too Much Sun!", (0, 0, 0))
+    print_text(font, 250, 220, "Use A/D to move left/right", dark)
+    print_text(font, 250, 250, "Left Click - Swing Pool Noodle", dark)
+    print_text(font, 250, 280, "Right Click - Spray Aloe", dark)
+    print_text(font, 250, 310, "Help sunburnt people and survive!", dark)
+    print_text(font, 250, 360, "Press ENTER to start...", dark)
+
+    pygame.display.flip()
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_RETURN:
+                    waiting = False
+                if event.key == K_ESCAPE:
+                    sys.exit()
+             
+show_menu()
 done = False
 
 while not done:
@@ -122,10 +148,10 @@ while not done:
                     # play bonk sound
                     bonk.play()
 
-            # right click - shoot water gun
+            # right click - shoot aloe
             elif event.button == 3:
                 current_time = pygame.time.get_ticks()
-                if water >= 1 and current_time - last_shot_time >= shot_cooldown:
+                if aloe >= 1 and current_time - last_shot_time >= shot_cooldown:
                     start_pos = pygame.Vector2(player_rect.center)
                     target = pygame.Vector2(mouse_pos)
                     direction = (target - start_pos).normalize()
@@ -134,12 +160,12 @@ while not done:
                     droplet = pygame.Rect(start_pos.x, start_pos.y, 10, 5)
                     droplets.append((droplet, direction))
 
-                    # use one water and reset cooldown timer
-                    water -= 1
+                    # use one aloe and reset cooldown timer
+                    aloe -= 1
                     last_shot_time = current_time
 
-                    # play water splash sound
-                    water_splash.play()
+                    # play aloe splash sound
+                    aloe_splash.play()
 
         # handle quit
         if event.type == KEYDOWN:
@@ -166,8 +192,8 @@ while not done:
     screen.fill((135, 206, 250))
     pygame.draw.rect(screen, (255, 255, 153), (0, 500, 800, 100))
     
-    # draw water amount, health, wave, score
-    print_text(font, 40, 80, "Water: " + str(water), dark)
+    # draw aloe amount, health, wave, score
+    print_text(font, 40, 80, "Aloe: " + str(aloe), dark)
     print_text(font, 650, 80, "Health: " + str(player_health), dark)
     print_text(font, 670, 540, "Wave: " + str(wave), dark)
     print_text(font, 350, 80, "Score: " + str(score), dark)
@@ -186,7 +212,7 @@ while not done:
         enemy_spawn_timer = 0
         enemies_remaining -= 1
 
-    # water gun logic
+    # aloe gun logic
     for d in droplets[:]:
         rect, direction = d
         rect.x += direction.x * 10
@@ -200,14 +226,14 @@ while not done:
                 enemies_helped += 1
                 score += 10
                 if random.random() < 0.1:
-                    # 10% chance to restore 2 water
-                    water = min(water + 2, 20)  # cap at max water
+                    # 10% chance to restore 2 aloe
+                    aloe = min(aloe + 2, 20)  # cap at max aloe
                 break
 
         if rect.right < 0 or rect.left > 800 or rect.bottom < 0 or rect.top > 600:
             droplets.remove(d)
         else:
-            pygame.draw.rect(screen, (222, 244, 252), rect)
+            pygame.draw.rect(screen, (210, 255, 220), rect)
 
     # draw pool noodle
     if noodle_active:
@@ -236,7 +262,7 @@ while not done:
                 pygame.draw.rect(screen, (255, 255, 153), (0, 500, 800, 100))
                 screen.blit(player_img, player_rect)
                 print_text(font, 650, 80, "Health: 0", dark)
-                print_text(font, 40, 80, "Water: " + str(water), dark)
+                print_text(font, 40, 80, "Aloe: " + str(aloe), dark)
                 print_text(font, 670, 540, "Wave: " + str(wave), dark)
                 print_text(font, 350, 80, "Score: " + str(score), dark)
                 pygame.display.flip()
@@ -246,8 +272,8 @@ while not done:
             enemies_helped += 1
             score += 10
             if random.random() < 0.1:
-                # 10% chance to restore 2 water
-                water = min(water + 2, 20)  # cap at max water
+                # 10% chance to restore 2 aloe
+                aloe = min(aloe + 2, 20)  # cap at max aloe
                 
     # check if new wave should begin
     if enemies_helped >= enemies_needed:
