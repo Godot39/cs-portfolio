@@ -152,6 +152,7 @@ while not done:
             elif event.button == 3:
                 current_time = pygame.time.get_ticks()
                 if aloe >= 1 and current_time - last_shot_time >= shot_cooldown:
+                    # Rabbid76 on Stack Overflow
                     start_pos = pygame.Vector2(player_rect.center)
                     target = pygame.Vector2(mouse_pos)
                     direction = (target - start_pos).normalize()
