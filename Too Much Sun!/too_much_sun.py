@@ -1,4 +1,4 @@
-'''Too Much Sun! is a 2D wave-based game. Armed with a pool noodle and aloe gun, the player must \
+'''Too Much Sun! is a 2D wave-based game. Armed with a pool noodle and aloe vera, the player must \
 cool down waves of sunburnt people who are acting strangely due to staying in the sun too long.'''
 
 import pygame, sys, random
@@ -70,7 +70,7 @@ def restart():
                 else:
                     waiting = True
 
-# aloe gun vars
+# aloe vars
 droplets = []
 aloe = 20
 last_shot_time = 0
@@ -213,7 +213,7 @@ while not done:
         enemy_spawn_timer = 0
         enemies_remaining -= 1
 
-    # aloe gun logic
+    # aloe logic
     for d in droplets[:]:
         rect, direction = d
         rect.x += direction.x * 10
